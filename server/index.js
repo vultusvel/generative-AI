@@ -1,41 +1,28 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const routes = require("./routes");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 
-const envData = {
-  mongoKey: process.env.MONGODB_PASS,
-  mongoUser: process.env.MONGODB_USER,
-  PORT: process.env.PORT
-}
-
 dotenv.config();
 const app = express();
 
-app.listen(envData.PORT, () => {
-  console.log(`Server started on ${envData.PORT} port`);
-});
-
 app.use(cors());
+app.use(bodyParser.json());
 
-app.use("/", routes);
+
+app.use("/auth", routes);
 app.use(express.json());
-
-
 
 const start = async () => {
   try {
     await mongoose.connect(
-      `mongodb+srv://${envData.mongoUser}:${envData.mongoKey}@products.cdijfk0.mongodb.net/?retryWrites=true&w=majority&appName=Products`,
-      {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true
-      }
+      `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@products.cdijfk0.mongodb.net/?retryWrites=true&w=majority&appName=Products`,
     );
-    app.listen(PORT, () => console.log(`server started on port ${PORT}`));
+    app.listen(process.env.PORT, () => {
+      console.log(`Server started on ${process.env.PORT} port`);
+    });
   } catch (e) {
     console.log(e);
   }
