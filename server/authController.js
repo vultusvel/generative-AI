@@ -3,18 +3,16 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { validationResult } = require("express-validator");
 
-
 const generateAccessToken = (id) => {
-    const payload = {
-      id,
-    };
-    return jwt.sign(payload, process.env.SECRET, { expiresIn: "24h" });
+  const payload = {
+    id,
   };
+  return jwt.sign(payload, process.env.SECRET, { expiresIn: "24h" });
+};
 
 const authController = {
   async registration(req, res) {
     try {
-      console.log(req.body);
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ message: "Registration error", errors });
@@ -38,8 +36,6 @@ const authController = {
 
   async login(req, res) {
     try {
-      console.log(req.body);
-
       const { username, password } = req.body;
       const user = await User.findOne({ username });
       if (!user) {
@@ -49,9 +45,9 @@ const authController = {
       if (!validPassword) {
         return res.status(400).json({ message: `Incorrect password` });
       }
-
-      const token = generateAccessToken(user._id)
-      return res.json({token})
+      const id = user._id
+      const token = generateAccessToken(user._id);
+      return res.json({ token , id});
     } catch (error) {
       console.log(error);
       res.status(400).json({ message: "Login error" });
