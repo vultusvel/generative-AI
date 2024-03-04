@@ -1,8 +1,32 @@
-.cs-message-list{
-    background-color: #090E10;
+.cs-message-list {
+  background-color: #090e10;
 }
 
 .cs-chat-container .cs-message-input {
-    background-color: #090E10;
+  background-color: #090e10;
 }
 
+.user-message {
+  text-align: right;
+}
+
+.chat-message {
+  text-align: left;
+}
+
+.MuiImageList-root.MuiImageList-standard.css-8z7n5c-MuiImageList-root {
+  grid-template-columns: repeat(3, 400px) !important;
+  gap: 4px;
+  margin: 0 auto !important;
+  max-width: 100% !important; 
+  width: auto;
+}
+
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-18lq42w-MuiPaper-root {
+  width: 320px !important;
+}
+
+.cs-message__content-wrapper {
+  margin-top: 10px;
+}

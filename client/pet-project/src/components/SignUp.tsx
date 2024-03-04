@@ -52,6 +52,7 @@ export default function SignUp() {
 
             if (response.ok) {
                 console.log('User successfully registered');
+                window.location.href = '/';
             } else {
                 const data = await response.json();
                 console.error('Registration error:', data.message);

@@ -1,40 +1,57 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+
+export interface Image {
+  id: string;
+  src: string;
+}
+
+interface Collection {
+  collectionId: string;
+  collectionName: string;
+  images: Image[];
+}
+
+interface UserCollectionsState {
+  userCollections: Collection[];
+}
+const initialState: UserCollectionsState = {
+  userCollections: [],
+};
 
 const userCollections = createSlice({
   name: "collections",
-  initialState: {
-    userCollections: [
-      {
-        id: uuidv4(),
-        collectionName: "",
-        images: [
-          {
-            id: uuidv4(),
-            src: "",
-          },
-        ],
-      },
-    ],
-  },
+  initialState,
   reducers: {
-    addImageToCollection: (state, action) => {
-        state.userCollections = [...state.userCollections, action.payload];
+    createCollection: (state, action) => {
+      const { collectionId, collectionName } = action.payload;
+      const existingCollectionIndex = state.userCollections.findIndex(
+        (col) => col.collectionId === collectionId
+      );
+      if (existingCollectionIndex === -1) {
+        state.userCollections.push({
+          collectionId,
+          collectionName,
+          images: [],
+        });
+      } else {
+        state.userCollections[existingCollectionIndex].collectionName =
+          collectionName;
+      }
     },
-    removeImageFromCollection: (state, action) => {
-      const { collectionId, imageId } = action.payload;
+    addImageToCollection: (
+      state,
+      action: PayloadAction<{ collectionId: string; image: Image }>
+    ) => {
+      const { collectionId, image } = action.payload;
       const collection = state.userCollections.find(
-        (collection) => collection.id === collectionId
+        (col) => col.collectionId === collectionId
       );
       if (collection) {
-        collection.images = collection.images.filter(
-          (image) => image.id !== imageId
-        );
+        collection.images.push(image);
       }
     },
   },
 });
 
-
-export const {addImageToCollection, removeImageFromCollection} = userCollections.actions
-export default userCollections.reducer
+export const { addImageToCollection, createCollection } = userCollections.actions;
+export default userCollections.reducer;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -10,7 +10,11 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signIn } from '../redux/reducers/authReducer';
+import { v4 as uuidv4 } from "uuid";
+
 
 function Copyright(props: any) {
     return (
@@ -30,7 +34,10 @@ export default function SignIn() {
 
     const [username, setUsername] = React.useState('');
     const [password, setPassword] = React.useState('');
+    const navigate = useNavigate();
 
+    const dispatch = useDispatch()
+    const _id = uuidv4()
 
     const handleUsernameChange = (event: any) => {
         setUsername(event.target.value);
@@ -39,7 +46,6 @@ export default function SignIn() {
     const handlePasswordChange = (event: any) => {
         setPassword(event.target.value);
     }
-
 
     const handleLogin = async () => {
         try {
@@ -54,13 +60,28 @@ export default function SignIn() {
             if (response.ok) {
                 const data = await response.json();
                 const token = data.token;
-                localStorage.setItem('token', token);
+                localStorage.setItem('user', JSON.stringify({
+                    userData: {
+                        _id: _id,
+                        username: username,
+                    },
+                    accessToken: token,
+                }));
+
+                dispatch(signIn({
+                    userData: {
+                        _id: _id,
+                        username: username,
+                    },
+                    accessToken: token,
+                }));
                 console.log('User successfully logged in');
-                window.location.href = '/chat';
+                navigate("/chat");
             } else {
                 const data = await response.json();
                 console.error('Login error:', data.message);
             }
+
         } catch (error) {
             console.error('Error during query execution:', error);
         }
@@ -70,6 +91,8 @@ export default function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
     };
+
+
 
     return (
         <ThemeProvider theme={defaultTheme}>
@@ -119,11 +142,13 @@ export default function SignIn() {
                             fullWidth
                             variant="contained"
                             onClick={handleLogin}
+
                             sx={{ mt: 3, mb: 2 }}
 
                         >
                             Sign In
                         </Button>
+
                         <Grid container>
 
                             <Grid item>
