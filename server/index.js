@@ -39,22 +39,14 @@ const start = async () => {
 
 start();
 
-
 const openai = new OpenAI({
   apiKey: process.env.OPEN_AI_KEY,
 });
 
 async function processReceivedData(data,res) {
     const fullSentence = data.toSend.message;
-  
-    const startPhrase = "So in the T-shirt you want: ";
-    const endPhrase = "If you are agree please click to the button above.";
-  
-    const startIndex = fullSentence.indexOf(startPhrase) + startPhrase.length;
-    const endIndex = fullSentence.indexOf(endPhrase);
-  
-    const result = fullSentence.substring(startIndex, endIndex).trim();  
-    const imageUrl = await generate(result, res);
+    const desiredPart = fullSentence.substring(fullSentence.indexOf(":") + 2, fullSentence.indexOf("."));
+    const imageUrl = await generate(desiredPart, res);
     return imageUrl
   }
   
