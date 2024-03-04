@@ -30,4 +30,10 @@ Run web:
 ```bash
 npm run dev
 ```
+<img width="1503" alt="Screenshot 2024-03-04 at 04 14 42" src="https://github.com/vultusvel/generative-AI/assets/133922631/570a5567-0c22-43f0-a1c0-9036ca1ecfb9">
+<img width="1220" alt="Screenshot 2024-03-04 at 20 22 15" src="https://github.com/vultusvel/generative-AI/assets/133922631/b5105f43-1001-45b0-b32e-18e331596efd">
+<img width="1492" alt="Screenshot 2024-03-04 at 20 09 32" src="https://github.com/vultusvel/generative-AI/assets/133922631/cc83e288-ae5d-4224-a87a-653c699820df">
+<img width="966" alt="Screenshot 2024-03-04 at 20 18 13" src="https://github.com/vultusvel/generative-AI/assets/133922631/d8fd69a0-a98f-410d-904a-0601fd70b4ec">
+
+
 
