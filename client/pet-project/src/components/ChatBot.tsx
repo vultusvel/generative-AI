@@ -21,6 +21,7 @@ import { RootState } from '../redux/reducers/rootReducer';
 import { useDispatch } from 'react-redux';
 import { addMessage } from '../redux/reducers/chatReducer';
 import '../App.css'
+import { url } from '../url';
 
 
 const mess = `If you are agree please click to the button below.`
@@ -109,7 +110,7 @@ function ChatBot() {
         await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
-                Authorization: "Bearer " + import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
+                Authorization: "Bearer " + import.meta.env.VITE_REACT_APP_OPENAI_API_KEY,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(apiRequestBody)
@@ -132,7 +133,7 @@ function ChatBot() {
 
         try {
             setLoading(true);
-            const response = await axios.post('http://localhost:3003/api/data', { toSend });
+            const response = await axios.post(`${url}/api/data`, { toSend });
             const responseData = response.data;
             const imageUrl = responseData.imageUrl;
             console.log('Data sent successfully!');

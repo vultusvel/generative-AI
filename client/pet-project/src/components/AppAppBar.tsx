@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, PaletteMode, Toolbar } from '@mui/material';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -8,7 +8,13 @@ import Drawer from '@mui/material/Drawer';
 import ToggleColorMode from './ToggleColorMode';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { signOutFrom } from '../redux/reducers/authReducer';
+import axios from 'axios';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/reducers/rootReducer';
+import { url } from '../url';
 
 interface AppAppBarProps {
     mode: PaletteMode;
@@ -17,10 +23,63 @@ interface AppAppBarProps {
 
 function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
     const [open, setOpen] = React.useState(false);
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const data = useSelector((state: RootState) => state.collections.userCollections)
+    let user: any
+    const userSessionData = sessionStorage.getItem('user');
+    if (userSessionData) {
+        user = JSON.parse(userSessionData);
+    } else {
+        console.log('User session data not found');
+    }
+
+    useEffect(() => {
+        const sendDataToServer = async () => {
+            try {
+                let token;
+                const tokenString = sessionStorage.getItem('user');
+
+                if (tokenString) {
+                    try {
+                        let obj = JSON.parse(tokenString);
+                        token = obj.accessToken;
+                    } catch (error) {
+                        console.error('Error parsing token:', error);
+                    }
+                }
+                const config = {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                };
+                const response = await axios.post(`${url}/auth/collections`, { data, user }, config);
+                const userCollections = response.data.userCollections;
+                localStorage.setItem('userCollections', JSON.stringify(userCollections));
+            } catch (error) {
+                console.error('Error sending data:', error);
+            }
+        };
+
+        sendDataToServer();
+    }, [data]);
 
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
     };
+
+    const handleLogOut = () => {
+        dispatch(signOutFrom())
+        sessionStorage.setItem('user', JSON.stringify({
+            userData: {
+                _id: "",
+                username: "",
+            },
+            accessToken: "",
+        }));
+        navigate("/")
+    }
 
     const DrawerList = (
         <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
@@ -129,6 +188,9 @@ function AppAppBar({ mode, toggleColorMode }: AppAppBarProps) {
                             <Drawer open={open} onClose={toggleDrawer(false)}>
                                 {DrawerList}
                             </Drawer>
+                        </Box>
+                        <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Button onClick={handleLogOut} >Sign Out</Button>
                         </Box>
                     </Toolbar>
                 </Container>

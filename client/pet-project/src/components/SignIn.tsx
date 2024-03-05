@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,6 +14,11 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { signIn } from '../redux/reducers/authReducer';
 import { v4 as uuidv4 } from "uuid";
+import Cookies from 'js-cookie';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/reducers/rootReducer';
+import axios from 'axios';
+import { url } from '../url';
 
 
 function Copyright(props: any) {
@@ -37,6 +42,8 @@ export default function SignIn() {
     const navigate = useNavigate();
 
     const dispatch = useDispatch()
+
+  
     const _id = uuidv4()
 
     const handleUsernameChange = (event: any) => {
@@ -49,7 +56,7 @@ export default function SignIn() {
 
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:3003/auth/login', {
+            const response = await fetch(`${url}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -60,7 +67,7 @@ export default function SignIn() {
             if (response.ok) {
                 const data = await response.json();
                 const token = data.token;
-                localStorage.setItem('user', JSON.stringify({
+                sessionStorage.setItem('user', JSON.stringify({
                     userData: {
                         _id: _id,
                         username: username,

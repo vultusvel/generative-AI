@@ -10,6 +10,8 @@ import { MenuItem } from '@mui/material';
 import { v4 as uuidv4 } from "uuid";
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import { saveAs } from 'file-saver'
+
 
 interface ImageGenerateProps {
     url: any;
@@ -30,9 +32,12 @@ const ImageGenerate: React.FC<ImageGenerateProps> = ({ url, handleClose }) => {
         }
 
     }, [savedCollections])
-
     const image = url
     const id = uuidv4()
+
+    const downloadImage = () => {
+        saveAs(url, 'image.png') 
+      }
 
     const handleAddCollection = () => {
         const newImage = {
@@ -63,7 +68,7 @@ const ImageGenerate: React.FC<ImageGenerateProps> = ({ url, handleClose }) => {
 
     return (
         <div>
-            <img src={image} alt="Generated Image" />
+            <img src={image} alt="Generated Image" onClick={downloadImage}/>
             <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
                     <InputLabel id="select-label">Select collection</InputLabel>
@@ -89,6 +94,8 @@ const ImageGenerate: React.FC<ImageGenerateProps> = ({ url, handleClose }) => {
 
             <Button onClick={handleAddCollection}>Add to the collection</Button>
             <Button onClick={handleClose}>Close</Button>
+            <Button onClick={downloadImage}>DownLoad</Button>
+            
 
         </div>
     )

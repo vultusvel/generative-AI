@@ -6,8 +6,6 @@ import getLPTheme from './getLPTheme';
 import AppAppBar from './AppAppBar';
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/reducers/rootReducer';
 import { Image, createCollection } from '../redux/reducers/userCollections';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
@@ -38,20 +36,11 @@ export default function Collections() {
     const [localCollections, setLocalCollections] = useState<any[]>([]);
     const [selectedCollectionImages, setSelectedCollectionImages] = React.useState<Image[]>([]);
 
-
     useEffect(() => {
         const savedCollections = localStorage.getItem('userCollections');
         if (savedCollections !== null) {
             const collections = JSON.parse(savedCollections);
-            setLocalCollections(collections); 
-            setShowCollections(true);
-        }
-    }, []); 
-
-    React.useEffect(() => {
-        const savedCollections = localStorage.getItem('collections');
-        if (savedCollections) {
-            setCollections(JSON.parse(savedCollections));
+            setLocalCollections(collections);
             setShowCollections(true);
         }
     }, []);
@@ -88,9 +77,6 @@ export default function Collections() {
         dispatch(createCollection(newCollection))
         setOpen(false)
         setCollections([...collections, newCollection]);
-
-        localStorage.setItem('collections', JSON.stringify([...collections, newCollection]));
-
         setShowCollections(true);
     }
 

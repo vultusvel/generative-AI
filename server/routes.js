@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { check } = require("express-validator");
-const controller = require("./authController");
+const controllers = require("./controllers");
+
 const authMiddleware = require("./middleware/authMiddleware");
 
 router.post(
@@ -16,11 +17,9 @@ router.post(
       max: 10,
     }),
   ],
-  controller.registration
+  controllers.registration
 );
 
-router.post("/login", controller.login);
-router.get("/users", authMiddleware, controller.users);
-
-router.post("/collections", authMiddleware, controller.userCollections);
+router.post("/login", controllers.login);
+router.post("/collections", authMiddleware, controllers.collections);
 module.exports = router;

@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { NavLink } from 'react-router-dom';
+import { url } from '../url';
 
 function Copyright(props: any) {
     return (
@@ -42,7 +43,7 @@ export default function SignUp() {
 
     const handleRegistration = async () => {
         try {
-            const response = await fetch('http://localhost:3003/auth/registration', {
+            const response = await fetch(`${url}/auth/registration`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
